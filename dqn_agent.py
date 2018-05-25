@@ -4,6 +4,8 @@ import os
 import numpy as np
 import tensorflow as tf
 
+screen_rows = 16
+screen_cols = 16
 
 class DQNAgent:
     """
@@ -16,11 +18,11 @@ class DQNAgent:
         self.environment_name = environment_name
         self.enable_actions = enable_actions
         self.n_actions = len(self.enable_actions)
-        self.minibatch_size = 32
-        self.replay_memory_size = 1000
-        self.learning_rate = 0.001
-        self.discount_factor = 0.9
-        self.exploration = 0.1
+        self.minibatch_size = 20
+        self.replay_memory_size = 3000
+        self.learning_rate = 0.01
+        self.discount_factor = 0.87
+        self.exploration = 0.31
         self.model_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "models")
         self.model_name = "{}.ckpt".format(self.environment_name)
 
@@ -34,19 +36,19 @@ class DQNAgent:
         self.current_loss = 0.0
 
     def init_model(self):
-        # input layer (8 x 8)
-        self.x = tf.placeholder(tf.float32, [None, 8, 8])
+        # input layer
+        self.x = tf.placeholder(tf.float32, [None, screen_rows, screen_cols])
 
-        # flatten (64)
-        x_flat = tf.reshape(self.x, [-1, 64])
+        # flatten
+        x_flat = tf.reshape(self.x, [-1, screen_rows * screen_cols])
 
-        # fully connected layer (32)
-        W_fc1 = tf.Variable(tf.truncated_normal([64, 64], stddev=0.01))
-        b_fc1 = tf.Variable(tf.zeros([64]))
+        # fully connected layer
+        W_fc1 = tf.Variable(tf.truncated_normal([screen_rows * screen_cols, screen_rows * screen_cols], stddev=0.01))
+        b_fc1 = tf.Variable(tf.zeros([screen_rows * screen_cols]))
         h_fc1 = tf.nn.relu(tf.matmul(x_flat, W_fc1) + b_fc1)
 
         # output layer (n_actions)
-        W_out = tf.Variable(tf.truncated_normal([64, self.n_actions], stddev=0.01))
+        W_out = tf.Variable(tf.truncated_normal([screen_rows * screen_cols, self.n_actions], stddev=0.01))
         b_out = tf.Variable(tf.zeros([self.n_actions]))
         self.y = tf.matmul(h_fc1, W_out) + b_out
 
