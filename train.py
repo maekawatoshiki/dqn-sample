@@ -6,7 +6,7 @@ from dqn_agent import DQNAgent
 
 if __name__ == "__main__":
     # parameters
-    n_epochs = 1300
+    n_epochs = 1000
 
     # environment, agent
     env = CatchBall()
@@ -43,8 +43,8 @@ if __name__ == "__main__":
             frame += 1
             loss += agent.current_loss
             Q_max += np.max(agent.Q_values(state_t))
-            if reward_t == 1:
-                win += 1
+        if reward_t >= 1:
+            win += 1
 
         print("EPOCH: {:03d}/{:03d} | WIN: {:03d} | LOSS: {:.4f} | Q_MAX: {:.4f}".format(
             e, n_epochs - 1, win, loss / frame, Q_max / frame))

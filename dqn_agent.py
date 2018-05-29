@@ -4,8 +4,8 @@ import os
 import numpy as np
 import tensorflow as tf
 
-screen_rows = 16
-screen_cols = 16
+screen_rows = 12
+screen_cols = 12
 
 class DQNAgent:
     """
@@ -18,11 +18,11 @@ class DQNAgent:
         self.environment_name = environment_name
         self.enable_actions = enable_actions
         self.n_actions = len(self.enable_actions)
-        self.minibatch_size = 20
-        self.replay_memory_size = 2000
-        self.learning_rate = 0.003
-        self.discount_factor = 0.7
-        self.exploration = 0.1
+        self.minibatch_size = 10
+        self.replay_memory_size = 1000
+        self.learning_rate = 0.01
+        self.discount_factor = 0.9
+        self.exploration = 0.15
         self.model_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "models")
         self.model_name = "{}.ckpt".format(self.environment_name)
 
